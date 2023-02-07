@@ -25,7 +25,35 @@ Risk registers are important to understand the risks the company may face and ho
 
 An area where developers are able to write/run and test code. DevOps engineers create these environments for the developer teams. we prepare the applications/ extensions they need for this space. By doing this we can standardise the developer teams communication and collaboration.
 
-![img.png](img.png)
+![img.png](Images/img.png)
 
+# Ruby Installation
+
+https://rubyinstaller.org/downloads/
+
+Once you downland the version of ruby you need, Use git bash to check the version you have using `ruby --version` (make sure to rin gitbash as administrator)
+
+# Virtual Box Installation
+
+https://www.virtualbox.org/wiki/Download_Old_Builds_6_1
+
+Once you downland the version of virtual box you need, make sure to run virtual box as administrator
+
+### Machine settings 
+Make sure to check windows hypervisor platform, you can find this by  searching in your compters setting ' Turn Windows settings on or off'
+
+![img_1.png](Images/img_1.png)
+
+# Vagrant Installation
+
+https://www.vagrantup.com/
+
+Once you downland the version of vagrant you need, Use git bash to check the version you have using `vagrant --version` (make sure to rin gitbash as administrator)
+
+Use `vagrant init ubuntu/xenia164` 
+
+![img_2.png](Images/img_2.png)
+
+https://github.com/khanmaster/vb_vagrant_installtion
 
 
