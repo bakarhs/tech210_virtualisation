@@ -65,4 +65,65 @@ grep * =
 grep ` ` * -R =
 ls f* =example of a wildcard that allows you to search for any file/folder that contains the secifeid letter (in thid example i used f)
 ```
+sudo - superuser do
+
+chmod - change permissions 
+
+chmod settings:
+
+linux permissions:
+```
+r = Read = you may view the contents of the file
+w = Write = you may change the contents of the file
+x = Execute = you may execute or run the file if it is a program or script
+```
+
+![img.png](images/img_2.png)
+
+Owner(u-user) - Group(g-group) - Other/All(o-other)
+
+`+` = add permissions
+
+`-` = take away permissions 
+
+## How to enter Task Manager in linux?
+
+Using the command `Top` for real time updates on processes:
+
+![img.png](images/img_3.png)
+
+or you could use the command `ps` to see what is happening in the terminal (there is also `ps -aux` to get a run down of everything)
+
+Example of `ps`:
+
+![img.png](images/img_4.png)
+
+Example of `ps -aux`:
+
+![img.png](images/img_5.png)
+
+## Removing a process:
+
+kill + `processs PID` - This will stop a process (if there are problems with getting rid of the process you can do `kill -9 "process PID"` to force terminate)
+
+## Installing Tree
+
+1. `sudo apt-get update -y`
+2. `sudo apt install tree -y`
+3. `tree`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

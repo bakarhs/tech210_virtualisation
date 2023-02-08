@@ -91,5 +91,31 @@ Now when you search the Ip address in your browser you should see the website we
 ![img.png](Images/img_7.png)
 
 
+# Expanding on our Vms Application
 
+So after completing all that we received a new task to build a similar Vm but now with an app and environment folder.
+1. use `vagrant destroy` to get rid of your current vm and start new (if this doesn't work you can go into Virtual box and terminated it inside the application).
+2. Now use the previous steps in order to run a new virtual machine. However, make sure to also add the app and environment files into the same folder as your vagrant file and also add `
+  config.vm.synced_folder "app", "/home/vagrant/app"` to your vagrant file
 
+![img.png](bash/images/img_6.png)
+
+3. Using Visual studio codes bash terminal you now want to `cd environment` and `cd spec test`
+
+![img.png](img.png)
+
+This is an example of how it should look
+
+4. Next use `gem install bundler` and then `bundle` and now you can use `rake spec` to check if all the features needed are installed. For now, it will come back with 7 mailers because we haven't installed these packages
+5. Now in our GitBash terminal (remember to ssh into Vm) we want to use `sudo apt-get update -y` and then use `sudo apt-get upgrade -y` to get all the latest versions (This can be somewhat dangerous to do in a production environment)
+6. Next do `sudo apt-get install nginx -y` and `sudo systemctl enable nginx -y` or `sudo systemctl start nginx -y` to enable ngnix
+7. If you do `rake spec ` again in visual code you will now see there are only 3 failures. We want to continue with `sudo apt-get install python-software-properties` this is a specific version and must be inputted as so
+8. We also need a specific version on nodejs, so we want to input `curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -` when we install nodejs we will get this version now.
+9. We can now install `sudo apt-get install nodejs -y` for nodejs and jus check that with `nodejs -v` and if we now do a `rake spec` there will only be one failure left
+10. All we have to do is `sudo npm install pm2 -g` to install the last package your `rake spec should now be fully done`
+11. Now when we `cd app` and use `ls` we should see a couple of files
+
+![img_1.png](img_1.png)
+
+and we can use `npm install` to install the app
+12. Finally, if we use `node app.js` we should receive "Your app is ready and listening on port 300" meaning we are all set up and ready to go. All that's left is to sear your `ip:3000` to see the developer site
