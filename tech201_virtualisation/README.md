@@ -102,7 +102,7 @@ So after completing all that we received a new task to build a similar Vm but no
 
 3. Using Visual studio codes bash terminal you now want to `cd environment` and `cd spec test`
 
-![img.png](img.png)
+![img.png](Images/img_8.png)
 
 This is an example of how it should look
 
@@ -115,7 +115,32 @@ This is an example of how it should look
 10. All we have to do is `sudo npm install pm2 -g` to install the last package your `rake spec should now be fully done`
 11. Now when we `cd app` and use `ls` we should see a couple of files
 
-![img_1.png](img_1.png)
+![img_1.png](Images/img_9.png)
 
 and we can use `npm install` to install the app
 12. Finally, if we use `node app.js` we should receive "Your app is ready and listening on port 300" meaning we are all set up and ready to go. All that's left is to sear your `ip:3000` to see the developer site
+
+## How to create an automated template using provisioning
+
+It can be long to repeat these steps every time we need an environment for a developer. What we can do is create a template so every time the Vm is made it will come with everything pre-installed with the right versions.
+
+1. You want to start by creating a file called `provision.sh`
+2. Now in `provision.sh` you can create a bash script, this will make sure that evey time run `vagrant up` the cript will input command for you so that it will be ready when it starts:
+
+![img_2.png](Images/img_10.png)
+
+* Notice how we use `cd app` to insure we are in the app folder because this is where `app.js` resides and is what we use to launch the app
+
+3. We also need to make sure to update this change in our vagrant file by adding ```# Provisioning
+  config.vm.provision "shell", path: "provision.sh"```
+
+and it should look something like this:
+
+![img_3.png](Images/img_11.png)
+
+4. Now when we use `vagrant up` it should come preinstalled to the app and all you need to do is search `ip address:3000` on your web browser
+
+
+
+
+
