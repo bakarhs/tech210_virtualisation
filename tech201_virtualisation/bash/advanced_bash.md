@@ -4,14 +4,12 @@
 ![img.png](images/img.png)
 ```
 - `uname` = username
-flags = 
+flags = Flags are used to modify the behavior of a command.
 -a = --all
--s =
--r =
--i = 
--o = 
--si = 
--srp = 
+-s = stuid / setuid bit and the executable bit both are set
+-r = recursive option
+-i = -i selects Internet files or sockets.
+-o = often used to denote the name of the output file
 ```
 
 ```
@@ -60,9 +58,8 @@ pwd = shows your current directory you are in
 -help = will show you the commands and explain how they are used
 man ls = manual
 mand -k `` = will allow you to specify what you are looking for in the manual 
-grep ` ` =
-grep * =
-grep ` ` * -R =
+grep ` ` = used to search/ filter inputed text
+grep * =search for a pattern in all files in the current directory.
 ls f* =example of a wildcard that allows you to search for any file/folder that contains the secifeid letter (in thid example i used f)
 ```
 sudo - superuser do
