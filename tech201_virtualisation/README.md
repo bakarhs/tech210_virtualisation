@@ -141,6 +141,29 @@ and it should look something like this:
 4. Now when we use `vagrant up` it should come preinstalled to the app and all you need to do is search `ip address:3000` on your web browser
 
 
+# Using 2 Vm's to add a database to your application
 
+1. You want to first start by commenting out some codes in your provisioning script so that you can make sure to connect the Vms together. Specifically `cd app` and `node app.js`
+2. We now want to change our vagrant file so that it can boot up two different vms at the same time. it should look like so:
 
+![img_1.png](img_1.png)
 
+3. Now when we boot up our `vagrant up` we should see two different Vms in Virtual box.
+4. We want to start by installing the database by using the key `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927`
+5. To make sure it is working we need to use the command `echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list`
+
+It will display back - deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse
+
+6. We now need to upgrade and update the system using `sudo apt-get update -y` and `sudo apt-get upgrade -y`
+7. We can now install the database using `sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20` if you would like to check the status of the database this can be done using the command `sudo systemctl status mongod` this will show you if it is active or not
+8. Now we want to start and enable our database using `udo systemctl start mongod` and `sudo systemctl enable mongod`
+
+If successfully enabled, we will receive the following message in the console.
+
+Created symlink /etc/systemd/system/multi-user.target.wants/mongod.service -> /lib/systemd/system/mongod.service.
+
+9. We now need to change the configurations of our database to give us access. we can enter `sudo nano /etc/mongod.conf` and change `bindIP: 127.0.0.1` to `0.0.0.0` and this will basically allow access to anyone. We can now restart our database with `sudo systemctl restart mongod` and enable it with `udo systemctl enable mongod`
+10. Now that we're done with our database we just need to the app Vm. We want to start by creating an environmental variable by using `export db_host=mongodb://192.168.10.150:27017/posts` and we can check that this worked by using `source .bashrc` and this will let us know if our `printenv db_host` will work.
+11. Now all we have to do is cd into our app folder and do `pnm install` and `node app.js` to finish of linking the database and the app
+
+![img_2.png](img_2.png)
