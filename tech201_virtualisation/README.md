@@ -146,7 +146,7 @@ and it should look something like this:
 1. You want to first start by commenting out some codes in your provisioning script so that you can make sure to connect the Vms together. Specifically `cd app` and `node app.js`
 2. We now want to change our vagrant file so that it can boot up two different vms at the same time. it should look like so:
 
-![img_1.png](img_1.png)
+![img_1.png](Images/img_13.png)
 
 3. Now when we boot up our `vagrant up` we should see two different Vms in Virtual box.
 4. We want to start by installing the database by using the key `sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927`
@@ -166,4 +166,159 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mongod.service -> /l
 10. Now that we're done with our database we just need to the app Vm. We want to start by creating an environmental variable by using `export db_host=mongodb://192.168.10.150:27017/posts` and we can check that this worked by using `source .bashrc` and this will let us know if our `printenv db_host` will work.
 11. Now all we have to do is cd into our app folder and do `pnm install` and `node app.js` to finish of linking the database and the app
 
-![img_2.png](img_2.png)
+![img_2.png](Images/img_14.png)
+
+# Automate multimachine Vagrant
+
+Stage 1
+
+Find a way to provision the database vm in your Vagrantfile. Note the provision file for the database(db) machine needs to be separate and thus in a separate folder.
+
+Provision it to have MongoDB after a 'vagrant up'
+
+Get /posts working
+
+## Created new provisioning files for app and database.
+
+So I began by creating new directory's I can reference on my vagrant file that contain the provisioning files for the app Vm and the database vm
+
+![img_3.png](Images/img_15.png)
+
+I then went on to make the script for each provisioning file.
+
+In terms of the app:
+
+```
+#!/bin/bash
+
+sudo apt-get update -y
+sudo apt-get upgrade -y
+sudo apt-get install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable
+sudo apt-get install python -y
+# install nodejs
+sudo apt-get install python-software-properties
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+sudo apt-get install nodejs -y
+
+# install pm2
+sudo npm install pm2 -g
+```
+
+and for the database:
+
+```
+#!/bin/bash
+
+# key installation
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
+echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
+# update and upgrade
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# install the db
+sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
+
+# start and enable database
+sudo systemctl start mongod
+sudo systemctl enable mongod
+```
+
+We also need to add some changes into our vagrant file, so that it knows where to find the script to build its Vms
+
+```
+Vagrant.configure("2") do |config|
+  config.vm.define "app" do |app|
+    app.vm.box = "ubuntu/bionic64"
+    app.vm.network "private_network", ip: "192.168.10.100"
+   
+    app.vm.synced_folder "app", "/home/vagrant/app"
+    app.vm.provision "shell", path: "environment/app/provision.sh", privileged: false
+  end
+
+  config.vm.define "database" do |database|
+    database.vm.box = "ubuntu/bionic64"
+    database.vm.network "private_network", ip: "192.168.10.150"
+    
+    database.vm.synced_folder "environment", "/home/vagrant/environment"
+    database.vm.provision "shell", path: "environment/database/provision.sh", privileged: false
+  end
+end
+```
+
+Now when we do `vagrant up` the Vm will be built with the mongodb database ready to be linked the era i received here is I did /post rather than /posts, so I got this:
+
+![img_4.png](Images/img_16.png)
+
+![img.png](img.png)
+
+This is the correct way it should look when inputting `http://192.168.10.100:3000/posts` 
+
+## Increasing the automation 
+
+So now that we want to create more automation the first step would be to make it so that we can configure the ip address when building the Vm ,so we don't have to deal with any networking
+
+Firstly, we had to change the database provisioning so that we can remove our current configuration and create a new file with our desired configurations:
+
+```
+#!/bin/bash
+
+# key installation
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D68FA50FEA312927
+echo "deb https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
+
+# update and upgrade
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# install the db
+sudo apt-get install mongodb-org=3.2.20 -y
+sudo apt-get install -y mongodb-org=3.2.20 mongodb-org-server=3.2.20 mongodb-org-shell=3.2.20 mongodb-org-mongos=3.2.20 mongodb-org-tools=3.2.20
+
+# start and enable database
+sudo systemctl start mongod
+sudo systemctl enable mongod
+
+# changing the ip
+sudo rm /etc/mongod.conf
+sudo cp environment/database/mongod.conf /etc/mongod.conf
+
+# start and enable database
+sudo systemctl restart mongod
+sudo systemctl enable mongod
+```
+
+```
+# added in 
+
+# changing the ip
+sudo rm /etc/mongod.conf # removes current configs
+sudo cp environment/database/mongod.conf /etc/mongod.conf # copies one file to another
+
+```
+
+This will allow the new file we make to be copied into `/etc/momngod.conf`, our configuration file is within the database file and looks like this:
+
+![img_1.png](img_1.png)
+
+Now we can also change our application provisioning to automate our variable creation simply by adding in :
+
+```
+# creating host name variable
+echo 'export DB_HOST=mongodb://192.168.10.150:27017/posts' >> ~/.bashrc
+source .bashrc
+```
+
+This will make a persistent variable connecting our  DB to our app and also making sure we don't need to continually make the variable every time we load our Vms.
+
+
+
+
+
+
+
+
+

@@ -12,7 +12,7 @@ A proxy is a server that acts as an intermediary for requests from clients seeki
 
 ## Proxy Vs. reverse proxy
 
-![img.png](img.png)
+![img.png](Images/img_12.png)
 
 The main difference between a reverse proxy and a regular proxy is the direction of the request. A regular proxy handles requests from the client to the server, while a reverse proxy handles requests from the server to the client. Additionally, reverse proxies are typically used for specific purposes, such as load balancing, security, and performance optimization, while regular proxies are used for general purposes, such as anonymity and bypassing restrictions.
 
