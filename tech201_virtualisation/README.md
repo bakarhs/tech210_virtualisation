@@ -2,7 +2,7 @@
 tech210_virtualisation
 - Testing Local to GitHub to Jenkins using a webhook
 - Testing if job merges!!!
-- Testing ec2!!!
+- Testing ec2!
 # Dev ops and Developments
 
 ## DevOps
